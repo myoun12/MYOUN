@@ -17,26 +17,26 @@ module.exports = {
 
   onStart: async function ({ api, event }) {
     const ownerText = 
-`╭─ 👑 Oᴡɴᴇʀ Iɴғᴏ 👑 ─╮
-│ 👤 Nᴀᴍᴇ       : Mᴏʜᴀᴍᴍᴀᴅ Aᴋᴀsʜ
-│ 🧸 Nɪᴄᴋ       : Aᴋᴀsʜ
-│ 🎂 Aɢᴇ        : 18+
-│ 💘 Rᴇʟᴀᴛɪᴏɴ : Sɪɴɢʟᴇ
-│ 🎓 Pʀᴏғᴇssɪᴏɴ : Sᴛᴜᴅᴇɴᴛ
-│ 📚 Eᴅᴜᴄᴀᴛɪᴏɴ : Iɴᴛᴇʀ 2ɴᴅ Yᴇᴀʀ
-│ 🏡 Lᴏᴄᴀᴛɪᴏɴ : 𝐃𝐡𝐚𝐤𝐚 - 𝐆𝐚𝐳𝐢𝐩𝐮𝐫
-├─ 🔗 Cᴏɴᴛᴀᴄᴛ ─╮
-│ 📘 Facebook  : fb.com/akashx404 
-│ 💬 Messenger: m.me/akashx404 
-│ 📞 WhatsApp  : wa.me/01933165880
-╰────────────────╯`;
+`┌───────────────⭓
+│ 𝗢𝗪𝗡𝗘𝗥 𝗗𝗘𝗧𝗔𝗜𝗟𝗦
+├───────────────
+│ 👤𝐍𝐚𝐦𝐞 : 𝐌𝐘𝐎𝐔𝐍 𝐒𝐎𝐑𝐊𝐀𝐑
+│ 🚹 𝐆𝐞𝐧𝐝𝐞𝐫 : 𝐌𝐚𝐥𝐞
+│ ❤️ 𝐑𝐞𝐥𝐚𝐭𝐢𝐨𝐧 : 𝐒𝐢𝐧𝐠𝐥𝐞
+│ 🎂 𝐀𝐠𝐞 : 𝟏𝟖+
+│ 🕌 𝐑𝐞𝐥𝐢𝐠𝐢𝐨𝐧 : 𝐈𝐬𝐥𝐚𝐦
+│ 🎓 𝐄𝐝𝐮𝐜𝐚𝐭𝐢𝐨𝐧 : 𝟐𝐧𝐝 𝐒𝐞𝐦𝐞𝐬𝐭𝐞𝐫 (𝐂𝐢𝐯𝐢𝐥)
+│ 💼 𝐉𝐨𝐛 : 𝐓𝐚𝐧𝐤𝐢 𝐌𝐚𝐫𝐚
+│ 👑 𝐑𝐨𝐥𝐞 : 𝐆𝐫𝐨𝐮𝐩 𝐎𝐰𝐧𝐞𝐫
+│ 🏡 𝐀𝐝𝐝𝐫𝐞𝐬𝐬 : 𝐓𝐚𝐧𝐠𝐚𝐢𝐥, 𝐁𝐚𝐧𝐠𝐥𝐚𝐝𝐞𝐬𝐡
+└───────────────⭓`;
 
     const cacheDir = path.join(__dirname, "cache");
     const imgPath = path.join(cacheDir, "owner.jpg");
 
     if (!fs.existsSync(cacheDir)) fs.mkdirSync(cacheDir);
 
-    const imgLink = "https://i.imgur.com/1G4ZhU7.jpeg";
+    const imgLink = "https://i.imgur.com/k0mp474.jpeg";
 
     const send = () => {
       api.sendMessage(
