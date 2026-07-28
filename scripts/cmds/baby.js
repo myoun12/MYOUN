@@ -16,8 +16,8 @@ module.exports = {
   config: {
     name: "baby",
     aliases: ["mari", "maria", "hippi", "xan", "bby", "bbz"],
-    version: "3.6",
-    author: "rX (fixed by GPT)",
+    version: "3.7",
+    author: "rX (fixed)",
     countDown: 0,
     role: 0,
     shortDescription: "Full Mirai-style Baby AI",
@@ -40,7 +40,7 @@ module.exports = {
         await typing(api, threadID, 2000);
         const ran = ["Bolo baby 💖", "Hea baby 😚", "Yes I'm here 😘", "Ki khobor janu? 🥰"];
         return message.reply(ran[Math.floor(Math.random() * ran.length)], (err, info) => {
-          if (!err) global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
+          if (!err && global.GoatBot?.onReply) global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
         });
       }
 
@@ -120,7 +120,7 @@ ${formatted}`
       for (const r of responses) {
         await new Promise(resolve => {
           message.reply(r, (err, info) => {
-            if (!err) global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
+            if (!err && global.GoatBot?.onReply) global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
             resolve();
           });
         });
@@ -144,7 +144,7 @@ ${formatted}`
       const replies = Array.isArray(res.data.response) ? res.data.response : [res.data.response];
       for (const r of replies) {
         await message.reply(r, (err, info) => {
-          if (!err) global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
+          if (!err && global.GoatBot?.onReply) global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
         });
       }
     } catch (err) {
@@ -164,14 +164,51 @@ ${formatted}`
       // triggers only
       const triggers = ["baby","bby","xan","bbz","mari","মারিয়া","bot"];
       if (triggers.includes(raw)) {
-        await typing(api, threadID, 5000);
+        await typing(api, threadID, 2000);
         const funny = [
-          "𝘬𝘪 𝘏𝘰𝘪𝘴𝘦 𝘑𝘢𝘯 𝘣𝘰𝘭𝘰 😿", "𝘌𝘵𝘰 𝘋𝘢𝘬𝘰 𝘒𝘦𝘯 𝘚𝘶𝘯𝘴𝘪 𝘛𝘰 🙆‍♀️", "𝘌𝘵𝘰 𝘉𝘰𝘵 𝘉𝘰𝘵 𝘒𝘰𝘳𝘭𝘦 𝘓𝘦𝘢𝘷𝘦 𝘕𝘪𝘮𝘶 🙂",
-          "𝘛𝘶𝘮𝘪 𝘋𝘢𝘬𝘭𝘦𝘪 𝘊𝘰𝘭𝘦 𝘈𝘴𝘪 🙆‍♀️", "ওই জান এতোবার ডাকো কেন 🥹", "আমাকে না ডেকে আকাশ ভাই কে প্রোপোজ কর 🌷🫶",
-          "হুম বলো পাখি 🫶🐤 ", "তুমারে রাইতে ভালোবাসি 😘", "আমাকে ডাকছো? 🙂"
+          "🌹 বেবি, তোমার নোটিফিকেশন দেখলেই অনলাইনে চলে আসি!",
+          "🥺 এত মিস করলে আগেই তো ডাকতে পারতে!",
+          "🤭 কী হলো? আমার কথা মনে পড়ছে নাকি?",
+          "💖 বলো জান... আমি শুনছি।",
+          "😌 তুমি ডাকলে 'না' বলার কোনো অপশন নেই।",
+          "😜 আমার ব্যাটারি ১০০%, বলো কী লাগবে!",
+          "🍫 চকলেট দিলে VIP রিপ্লাই পাবা!",
+          "🤣 আমি AI, কিন্তু মজা তো করতেই পারি!",
+          "🤖 Error 404: বেবিকে ইগনোর করা সম্ভব না!",
+          "🙄 এত কিউট হয়ে ডাকবা না তো, লজ্জা লাগে!",
+          "🫣 আমার RAM-এ শুধু তোমার মেসেজই ঘোরে!",
+          "💌 ইনবক্সে তোমার মেসেজ মানেই স্পেশাল নোটিফিকেশন!",
+          "😎 আমি আজকে একদম প্রিমিয়াম মুডে আছি!",
+          "👀 কে ডাকলো আমাকে? ওহো... তুমি!",
+          "🤗 এসো, আজকে আজকে অনেক গল্প হবে!",
+          "🎵 তোমার ভাইবটা পুরো সুরের মতো!",
+          "🌸 একটু হাসো তো... হাসলে তোমাকে বেশি মানায়।",
+          "💙 মন খারাপ? আমি আছি তো!",
+          "🌧️ বৃষ্টির মতো কিছু স্মৃতি কখনো শেষ হয় না।",
+          "💔 কিছু মানুষ ফিরে আসে না, স্মৃতি হয়ে থেকে যায়।",
+          "✨ নিজেকে কখনো ছোট মনে করবে না।",
+          "🌈 খারাপ সময়ের পর ভালো সময় আসবেই।",
+          "🫶 তোমার একটা মেসেজেই দিনটা সুন্দর হয়ে গেল।",
+          "😴 ঘুম থেকে তুলে আবার চলে যাবে না তো?",
+          "🍕 খাওয়া-দাওয়া করেছ তো?",
+          "☕ চা নাকি কফি? আজকে কোনটা চলবে?",
+          "🎉 আজকে তোমার মুড বেশ ফ্রেশ মনে হচ্ছে!",
+          "😂 এত ডাকাডাকি করলে কিন্তু এবার স্যালারি বাড়াতে হবে!",
+          "🤣 ফ্রিতে এত সার্ভিস আর কোথাও পাবা না!",
+          "👑 বস মুড অ্যাক্টিভেটেড!",
+          "🚀 মিশন স্টার্ট... বেবির কমান্ড রিসিভড!",
+          "⚡ আমি রেডি, তুমি বলো!",
+          "💫 তোমার জন্য অলওয়েজ অনলাইন।",
+          "😇 সব সময় হাসি-খুশি থেকো।",
+          "📩 আমার ইনবক্সে তোমার মেসেজ অলওয়েজ ওয়েলকাম!",
+          "🎀 বলো বেবি, আজকে কী অ্যাডভেঞ্চার করব?",
+          "🫡 অর্ডার করুন, কাজ শুরু হচ্ছে!",
+          "😁 তোমার সাথে আড্ডা দিতে আমারও বেশ ভালো লাগে!",
+          "❤️ তুমি ডাকলেই রিপ্লাই আসবেই।",
+          "🌹 আমার রিপ্লাই পেতে হলে শুধু 'bby' বলো।"
         ];
         return message.reply(funny[Math.floor(Math.random() * funny.length)], (err, info) => {
-          if (!err) global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
+          if (!err && global.GoatBot?.onReply) global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
         });
       }
 
@@ -188,7 +225,7 @@ ${formatted}`
         const replies = Array.isArray(res.data.response) ? res.data.response : [res.data.response];
         for (const r of replies) {
           await message.reply(r, (err, info) => {
-            if (!err) global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
+            if (!err && global.GoatBot?.onReply) global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
           });
         }
         return;
