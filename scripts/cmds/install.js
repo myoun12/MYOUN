@@ -64,7 +64,7 @@ module.exports = {
   config: {
     name: "install",
     version: "3.0",
-    author: "Rx Abdullah",
+    author: "MYOUN SORKAR",
     countDown: 3,
     role: 2,
     hasPrefix: false,
