@@ -1,4 +1,4 @@
-const axios = require("axios");
+Const axios = require("axios");
 const fs = require("fs-extra");
 const path = require("path");
 const cheerio = require("cheerio");
@@ -64,7 +64,7 @@ module.exports = {
   config: {
     name: "install",
     version: "3.0",
-    author: "MYOUN SORKAR",
+    author: "Rx Abdullah",
     countDown: 3,
     role: 2,
     hasPrefix: false,
