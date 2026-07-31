@@ -5,17 +5,17 @@
     "2FASecret": "",
     "i_user": "",
     "proxy": null,
-    "userAgent": "Mozilla/5.0 (Linux; Android 12; M2102J20SG) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0",
+    "userAgent": "Mozilla/5.0 (Linux; Android 12; M2102J20SG) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Mobile Safari/537.36",
     "intervalGetNewCookie": 1440,
     "notes": "Automatically retrieves new cookies every x minutes. Recommended: 1440 (1 day)."
   },
   "antiInbox": false,
   "language": "en",
   "notesLanguage": "change language using ISO 639-1 code",
-  "nickNameBot": "⎯͢⎯⃝😻𝗖𝗬𝗕𝗘𝗥 𝗕𝗢𝗧 𝗠𝗬𝗢𝗨𝗡⎯͢⎯⃝🌺",
-  "prefix": ".",
+  "nickNameBot": "⎯͢⎯⃝🌺𝗟𝗮𝗺𝗶𝗮 𝗔𝗸𝘁𝗵𝗮𝗿⎯͢⎯⃝😻",
+  "prefix": "+",
   "noPrefix": {
-    "enable": true,
+    "enable": false,
     "notes": "true = only bot admins can use commands without prefix | false = everyone must use prefix"
   },
   "adminOnly": {
@@ -24,17 +24,17 @@
   },
   "adminBot": [
     "100021922069388",
-    "",
-    ""
+    " ",
+    " "
   ],
   "reactUnsend": {
     "enable": true,
     "onlyAdmin": true,
     "emojis": [
       "😡",
-      "😮"
+      "🤬"
     ],
-    "notes": "If enable = true, bot will unsend any message reacted with these emojis. If onlyAdmin = true, only admin"
+    "notes": "If enable = true, bot will unsend any message reacted with these emojis. If onlyAdmin = true, only adminBot IDs can trigger it."
   },
   "whiteListMode": {
     "enable": false,
@@ -51,7 +51,7 @@
   },
   "database": {
     "type": "mongodb",
-    "uriMongodb": "mongodb+srv://eryxerxdb:eryxerxdbgoatv20cluster0.523a3n0.mongodb.net/?appName=Cluster0",
+    "uriMongodb": "mongodb+srv://eryxerxdb:eryxerxdbgoatv2@cluster0.523a3n0.mongodb.net/?appName=Cluster0",
     "autoSyncWhenStart": false,
     "autoRefreshThreadInfoFirstTime": true,
     "notes": "Recommended using 'mongodb' or 'sqlite'."
@@ -59,15 +59,15 @@
   "timeZone": "Asia/Dhaka",
   "credentials": {
     "gmailAccount": {
-      "email": "botofrenxxo@gmail.com",
-      "clientId": "848792512039-g3m1fd39p9ttu82gadkahk6kadjr0hcp.apps.googleusercontent.com",
-      "clientSecret": "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",
-      "refreshToken": "none",
+      "email": "",
+      "clientId": "",
+      "clientSecret": "",
+      "refreshToken": "",
       "apiKey": ""
     },
     "gRecaptcha": {
-      "siteKey": "6LfU0TUrAAAAAJYy_tn-q9x1EIEcyBK4NBVwuGdZ",
-      "secretKey": "6LfU0TUrAAAAAOR_CE7oZV-8Eo83LsJmb12-INfb"
+      "siteKey": "6LfU0TUrAAAAAJVy_tm-q9xlEIEeyBK4N8VwuGdZ",
+      "secretKey": "6LfU0TUrAAAAAOR_CE7oZV-8Eo83LsJmb12-lWFb"
     }
   },
   "dashBoard": {
@@ -83,3 +83,80 @@
       "channelName": "uptime",
       "verifyToken": ""
     }
+  },
+  "autoRestart": {
+    "time": null,
+    "notes": "Example: 60000 (1min), 3600000 (1hr), 0 0 * * * (daily)."
+  },
+  "autoUptime": {
+    "enable": false,
+    "timeInterval": 180,
+    "url": "",
+    "notes": "Time in seconds. Recommended for uptime monitors."
+  },
+  "autoLoadScripts": {
+    "enable": false,
+    "ignoreCmds": "",
+    "ignoreEvents": "",
+    "notes": "Automatically reloads scripts if edited."
+  },
+  "autoRefreshFbstate": true,
+  "autoReloginWhenChangeAccount": false,
+  "autoRestartWhenListenMqttError": true,
+  "restartListenMqtt": {
+    "enable": false,
+    "timeRestart": 3600000,
+    "delayAfterStopListening": 2000,
+    "logNoti": true,
+    "notes": "Restart listener every 1 hour."
+  },
+  "notiWhenListenMqttError": {
+    "notes": "Notification settings when MQTT stops listening.",
+    "gmail": {
+      "enable": false,
+      "emailGetNoti": ""
+    },
+    "telegram": {
+      "enable": false,
+      "botToken": "",
+      "chatId": ""
+    },
+    "discordHook": {
+      "enable": false,
+      "webhookUrl": ""
+    }
+  },
+  "hideNotiMessage": {
+    "commandNotFound": false,
+    "adminOnly": false,
+    "threadBanned": false,
+    "userBanned": false,
+    "needRoleToUseCmd": false,
+    "needRoleToUseCmdOnReply": false,
+    "needRoleToUseCmdOnReaction": false
+  },
+  "logEvents": {
+    "disableAll": false,
+    "message": true,
+    "message_reaction": true,
+    "message_unsend": true,
+    "message_reply": true,
+    "event": true,
+    "read_receipt": false,
+    "typ": false,
+    "presence": false
+  },
+  "optionsFca": {
+    "forceLogin": true,
+    "listenEvents": true,
+    "updatePresence": true,
+    "listenTyping": true,
+    "logLevel": "error",
+    "selfListen": false,
+    "selfListenEvent": true,
+    "autoMarkDelivery": false,
+    "autoReconnect": true,
+    "notes": "Docs: https://github.com/ntkhang03/fb-chat-api/blob/master/DOCS.md#apisetoptionsoptions"
+  }
+}
+  
