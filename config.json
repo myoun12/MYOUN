@@ -13,9 +13,9 @@
   "language": "en",
   "notesLanguage": "change language using ISO 639-1 code",
   "nickNameBot": "⎯͢⎯⃝🌺𝗟𝗮𝗺𝗶𝗮 𝗔𝗸𝘁𝗵𝗮𝗿⎯͢⎯⃝😻",
-  "prefix": "+",
+  "prefix": "-",
   "noPrefix": {
-    "enable": false,
+    "enable": true,
     "notes": "true = only bot admins can use commands without prefix | false = everyone must use prefix"
   },
   "adminOnly": {
@@ -24,8 +24,8 @@
   },
   "adminBot": [
     "100021922069388",
-    " ",
-    " "
+    "",
+    ""
   ],
   "reactUnsend": {
     "enable": true,
@@ -51,7 +51,7 @@
   },
   "database": {
     "type": "mongodb",
-    "uriMongodb": "mongodb+srv://eryxerxdb:eryxerxdbgoatv2@cluster0.523a3n0.mongodb.net/?appName=Cluster0",
+    "uriMongodb": "mongodb+srv://eryxenxdb:eryxenxdbgoatv2@cluster0.523a3n0.mongodb.net/?appName=Cluster0",
     "autoSyncWhenStart": false,
     "autoRefreshThreadInfoFirstTime": true,
     "notes": "Recommended using 'mongodb' or 'sqlite'."
@@ -59,10 +59,10 @@
   "timeZone": "Asia/Dhaka",
   "credentials": {
     "gmailAccount": {
-      "email": "",
-      "clientId": "",
-      "clientSecret": "",
-      "refreshToken": "",
+      "email": "botofnexxo@gmail.com",
+      "clientId": "848792512039-g3mlfd39p9ttu82ga4kahk6kadjr0hcp.apps.googleusercontent.com",
+      "clientSecret": "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",
+      "refreshToken": " ",
       "apiKey": ""
     },
     "gRecaptcha": {
@@ -158,4 +158,4 @@
     "autoReconnect": true,
     "notes": "Docs: https://github.com/ntkhang03/fb-chat-api/blob/master/DOCS.md#apisetoptionsoptions"
   }
-}
+    }
