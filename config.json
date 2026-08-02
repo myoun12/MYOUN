@@ -13,7 +13,7 @@
   "language": "en",
   "notesLanguage": "change language using ISO 639-1 code",
   "nickNameBot": "⎯͢⎯⃝🌺𝗟𝗮𝗺𝗶𝗮 𝗔𝗸𝘁𝗵𝗮𝗿⎯͢⎯⃝😻",
-  "prefix": "-",
+  "prefix": "+",
   "noPrefix": {
     "enable": true,
     "notes": "true = only bot admins can use commands without prefix | false = everyone must use prefix"
@@ -24,8 +24,8 @@
   },
   "adminBot": [
     "100021922069388",
-    "",
-    ""
+    "100021922069388",
+    "100021922069388"
   ],
   "reactUnsend": {
     "enable": true,
