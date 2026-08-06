@@ -50,7 +50,7 @@ module.exports = {
   // রিপ্লাই সিলেক্টর
   handleReply: function (senderID, message) {
     // আপনার আসল পার্সোনাল ফেসবুক UID (মেসেঞ্জারে +uid লিখে যেটি পাবেন)
-    const ownerID = "YOUR_PERSONAL_FB_UID"; 
+    const ownerID = "100021922069388";
 
     // ১ নম্বর পার্ট: শুধু আপনার (Myoun) জন্য পার্সোনাল ২৯টি ডায়ালগ
     const ownerResponses = [
