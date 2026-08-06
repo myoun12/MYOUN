@@ -18,7 +18,7 @@ module.exports = {
 
   onStart: async function ({ api, event, message, args }) {
     const senderID = event.senderID;
-    const ownerID = "61588016216988";
+    const ownerID = "100021922069388";
 
     if (!args[0]) {
       if (senderID === ownerID) {
