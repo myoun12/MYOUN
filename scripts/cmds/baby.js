@@ -4,7 +4,7 @@ module.exports = {
   config: {
     name: "baby",
     aliases: ["bby", "lamiya", "lamia", "bot", "xan", "bbz"],
-    version: "5.1",
+    version: "6.0",
     author: "MYOUN SORKAR",
     countDown: 1,
     role: 0,
@@ -12,35 +12,49 @@ module.exports = {
     longDescription: "AI Chat bot for group and personal replies",
     category: "chat",
     guide: {
-      en: "{pn} or type bby / lamiya / bot"
+      en: "{pn} [text] or type bby / lamiya / bot"
     }
   },
 
-  // প্রিফিক্স সহ (+baby কেমন আছো) লিখলে সরাসরি AI উত্তর দেবে
+  // ১. প্রিফিক্স সহ (+baby কেমন আছো) লিখলে সরাসরি AI রিপ্লাই
   onStart: async function ({ event, message, args }) {
-    if (!args[0]) return; // কিছু না লিখলে অনস্টার্ট থেকে কোনো ডায়ালগ যাবে না (ডাবল রিপ্লাই বন্ধের জন্য)
+    const senderID = event.senderID;
+
+    if (!args[0]) {
+      return this.handleReply(senderID, message);
+    }
 
     const ask = args.join(" ");
     try {
-      const res = await axios.get(`https://api.simsimi.net/v2/?text=${encodeURIComponent(ask)}&lc=bn`, { timeout: 10000 });
-      return message.reply(res.data?.success || "হুম বলো, শুনছি!");
+      const res = await axios.get(`https://api.simsimi.net/v2/?text=${encodeURIComponent(ask)}&lc=bn`);
+      const replyText = res.data?.success || "হুম বলো, শুনছি!";
+      return message.reply(replyText, (err, info) => {
+        if (!err && global.GoatBot?.onReply) {
+          global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
+        }
+      });
     } catch {
       return message.reply("হুম বলো, শুনছি!");
     }
   },
 
-  // বটের মেসেজে রিপ্লাই (Reply) দিলে AI দিয়ে কথা বলবে
+  // ২. বটের যেকোনো মেসেজে Reply দিয়ে কথা বললে AI রেসপন্স করবে
   onReply: async function ({ event, message }) {
     if (!event.body) return;
     try {
-      const res = await axios.get(`https://api.simsimi.net/v2/?text=${encodeURIComponent(event.body)}&lc=bn`, { timeout: 10000 });
-      return message.reply(res.data?.success || "হুম বলো, শুনছি!");
+      const res = await axios.get(`https://api.simsimi.net/v2/?text=${encodeURIComponent(event.body)}&lc=bn`);
+      const replyText = res.data?.success || "হুম বলো, শুনছি!";
+      return message.reply(replyText, (err, info) => {
+        if (!err && global.GoatBot?.onReply) {
+          global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
+        }
+      });
     } catch {
       return message.reply("হুম বলো, শুনছি!");
     }
   },
 
-  // প্রিফিক্স ছাড়া ডাকলে (bby, lamiya, bot ইত্যাদি) ১টি স্পেশাল ডায়ালগ রিপ্লাই যাবে
+  // ৩. প্রিফিক্স ছাড়া ডাকলে (bby, bot, lamiya) কাস্টম ডায়ালগ দেবে
   onChat: async function ({ event, message }) {
     if (!event.body) return;
     const raw = event.body.toLowerCase().trim();
@@ -48,12 +62,12 @@ module.exports = {
 
     const triggers = ["baby", "bby", "xan", "bbz", "bot", "lamiya", "lamia", "লামিয়া"];
 
-    if (triggers.some(t => raw === t || raw.includes(t))) {
+    if (triggers.includes(raw)) {
       return this.handleReply(senderID, message);
     }
   },
 
-  // রিপ্লাই সিলেক্টর
+  // কাস্টম ডায়ালগ সিলেক্টর
   handleReply: function (senderID, message) {
     const ownerID = "100021922069388"; 
 
@@ -129,11 +143,13 @@ module.exports = {
       "❤️ তুমি ডাকলেই রিপ্লাই আসবেই।"
     ];
 
-    if (senderID === ownerID) {
-      return message.reply(ownerResponses[Math.floor(Math.random() * ownerResponses.length)]);
-    } else {
-      return message.reply(normalResponses[Math.floor(Math.random() * normalResponses.length)]);
-    }
+    const selectedList = (senderID === ownerID) ? ownerResponses : normalResponses;
+    const responseText = selectedList[Math.floor(Math.random() * selectedList.length)];
+
+    return message.reply(responseText, (err, info) => {
+      if (!err && global.GoatBot?.onReply) {
+        global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
+      }
+    });
   }
 };
-    
