@@ -1,21 +1,35 @@
 const axios = require("axios");
 
-// SimSimi API Endpoint
-const simsim = "https://api.simsimi.net/v2";
-
 // Typing Effect Function
-async function typing(api, threadID, delay = 2000) {
+async function typing(api, threadID, delay = 1000) {
   try {
     api.sendTypingIndicator(threadID, true);
     await new Promise(resolve => setTimeout(resolve, delay));
   } catch {}
 }
 
+// ওয়ার্কিং AI রিপ্লাই ফাংশন
+async function fetchAIReply(text) {
+  try {
+    // ব্যাকআপ সহ ওয়ার্কিং API
+    const res = await axios.get(`https://simsimi.site/api/simtalk?text=${encodeURIComponent(text)}&lc=bn`, { timeout: 8000 });
+    if (res.data && res.data.message) {
+      return res.data.message;
+    }
+  } catch {
+    try {
+      const res2 = await axios.get(`https://api.simsimi.net/v2/?text=${encodeURIComponent(text)}&lc=bn`, { timeout: 8000 });
+      if (res2.data && res2.data.success) return res2.data.success;
+    } catch {}
+  }
+  return "হুম বলো জান, শুনছি!";
+}
+
 module.exports = {
   config: {
     name: "baby",
     aliases: ["bby", "lamiya", "lamia", "bot", "xan", "bbz"],
-    version: "7.0",
+    version: "8.0",
     author: "MYOUN SORKAR",
     countDown: 1,
     role: 0,
@@ -27,21 +41,13 @@ module.exports = {
     }
   },
 
-  onStart: async function ({ api, event, message, args, usersData }) {
-    const senderID = event.senderID;
-    const threadID = event.threadID;
-
-    if (!args[0]) {
-      return; 
-    }
+  onStart: async function ({ api, event, message, args }) {
+    if (!args[0]) return;
 
     const ask = args.join(" ");
-    const senderName = await usersData.getName(senderID);
-
     try {
-      await typing(api, threadID, 1500);
-      const res = await axios.get(`${simsim}/simsimi?text=${encodeURIComponent(ask)}&senderName=${encodeURIComponent(senderName)}`, { timeout: 15000 });
-      const replyText = res.data?.success || res.data?.response || "হুম বলো, শুনছি!";
+      await typing(api, event.threadID, 1000);
+      const replyText = await fetchAIReply(ask);
       
       return message.reply(replyText, (err, info) => {
         if (!err && global.GoatBot?.onReply) {
@@ -53,16 +59,14 @@ module.exports = {
     }
   },
 
-  onReply: async function ({ api, event, message, usersData }) {
+  onReply: async function ({ api, event, message }) {
     const text = event.body?.trim();
     if (!text) return;
-    const senderName = await usersData.getName(event.senderID);
 
     try {
-      await typing(api, event.threadID, 1500);
-      const res = await axios.get(`${simsim}/simsimi?text=${encodeURIComponent(text)}&senderName=${encodeURIComponent(senderName)}`, { timeout: 15000 });
+      await typing(api, event.threadID, 1000);
+      const replyText = await fetchAIReply(text);
 
-      const replyText = res.data?.success || res.data?.response || "হুম বলো, শুনছি!";
       return message.reply(replyText, (err, info) => {
         if (!err && global.GoatBot?.onReply) {
           global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
@@ -78,18 +82,16 @@ module.exports = {
     if (!raw) return;
 
     const senderID = event.senderID;
-    const senderName = await usersData.getName(senderID);
     const threadID = event.threadID;
 
-    // আপনার সঠিক ফেসবুক UID (Myoun)
+    // আপনার আসল ফেসবুক UID (Myoun)
     const ownerID = "100021922069388";
 
     try {
-      // ট্রিগার লিস্ট (মারিয়া বাদ দেওয়া হয়েছে)
       const triggers = ["baby", "bby", "xan", "bbz", "bot", "lamiya", "lamia", "লামিয়া"];
       
       if (triggers.includes(raw)) {
-        await typing(api, threadID, 1500);
+        await typing(api, threadID, 1000);
 
         // ১. আপনি (অনার) ডাকলে ২৯টি স্পেশাল রিপ্লাই
         if (senderID === ownerID) {
@@ -130,7 +132,7 @@ module.exports = {
           });
         }
 
-        // ২. অন্য কেউ ডাকলে ৩৮টি সাধারণ/মজার রিপ্লাই
+        // ২. অন্য কেউ ডাকলে ৩৮টি সাধারণ রিপ্লাই
         const funny = [
           "🌹 বেবি, তোমার নোটিফিকেশন দেখলেই অনলাইনে চলে আসি!",
           "🥺 এত মিস করলে আগেই তো ডাকতে পারতে!",
@@ -175,38 +177,19 @@ module.exports = {
         });
       }
 
-      // প্রিফিক্স চ্যাটিং (+baby কেমন আছো / baby কেমন আছো)
+      // প্রিফিক্স চ্যাটিং (+baby কেমন আছো / bby কেমন আছো)
       const prefixes = ["baby ", "bby ", "xan ", "bbz ", "bot ", "lamiya ", "lamia "];
       const prefix = prefixes.find(p => raw.startsWith(p));
       if (prefix) {
         const q = raw.replace(prefix, "").trim();
         if (!q) return;
 
-        await typing(api, threadID, 1500);
-        const res = await axios.get(`${simsim}/simsimi?text=${encodeURIComponent(q)}&senderName=${encodeURIComponent(senderName)}`, { timeout: 15000 });
+        await typing(api, threadID, 1000);
+        const replyText = await fetchAIReply(q);
 
-        const replyText = res.data?.success || res.data?.response || "হুম বলো, শুনছি!";
         return message.reply(replyText, (err, info) => {
           if (!err && global.GoatBot?.onReply) global.GoatBot.onReply.set(info.messageID, { commandName: "baby" });
         });
-      }
-
-      // AUTO-TEACH (রিপ্লাই দিয়ে শিখানোর লজিক)
-      if (event.messageReply) {
-        try {
-          const setting = await axios.get(`${simsim}/setting`, { timeout: 8000 });
-          if (setting.data?.autoTeach) {
-            const ask = event.messageReply.body?.toLowerCase().trim();
-            const ans = raw.trim();
-            if (ask && ans && ask !== ans) {
-              setTimeout(async () => {
-                try {
-                  await axios.get(`${simsim}/teach?ask=${encodeURIComponent(ask)}&ans=${encodeURIComponent(ans)}&senderName=${encodeURIComponent(senderName)}`, { timeout: 10000 });
-                } catch {}
-              }, 500);
-            }
-          }
-        } catch {}
       }
 
     } catch (err) {
