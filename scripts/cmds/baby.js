@@ -4,7 +4,7 @@ module.exports = {
   config: {
     name: "baby",
     aliases: ["bby", "lamiya", "lamia", "bot", "xan", "bbz"],
-    version: "4.6",
+    version: "5.1",
     author: "MYOUN SORKAR",
     countDown: 1,
     role: 0,
@@ -16,43 +16,47 @@ module.exports = {
     }
   },
 
-  // প্রিফিক্স সহ (+baby, +bby, +lamiya) কমান্ড দিলে কাজ করবে
+  // প্রিফিক্স সহ (+baby কেমন আছো) লিখলে সরাসরি AI উত্তর দেবে
   onStart: async function ({ event, message, args }) {
-    const senderID = event.senderID;
-
-    if (!args[0]) {
-      return this.handleReply(senderID, message);
-    }
+    if (!args[0]) return; // কিছু না লিখলে অনস্টার্ট থেকে কোনো ডায়ালগ যাবে না (ডাবল রিপ্লাই বন্ধের জন্য)
 
     const ask = args.join(" ");
     try {
-      const res = await axios.get(`https://api.simsimi.net/v2/?text=${encodeURIComponent(ask)}&lc=bn`);
+      const res = await axios.get(`https://api.simsimi.net/v2/?text=${encodeURIComponent(ask)}&lc=bn`, { timeout: 10000 });
       return message.reply(res.data?.success || "হুম বলো, শুনছি!");
     } catch {
       return message.reply("হুম বলো, শুনছি!");
     }
   },
 
-  // প্রিফিক্স ছাড়া (শুধু bby, lamiya, bot লিখলে) কাজ করবে
+  // বটের মেসেজে রিপ্লাই (Reply) দিলে AI দিয়ে কথা বলবে
+  onReply: async function ({ event, message }) {
+    if (!event.body) return;
+    try {
+      const res = await axios.get(`https://api.simsimi.net/v2/?text=${encodeURIComponent(event.body)}&lc=bn`, { timeout: 10000 });
+      return message.reply(res.data?.success || "হুম বলো, শুনছি!");
+    } catch {
+      return message.reply("হুম বলো, শুনছি!");
+    }
+  },
+
+  // প্রিফিক্স ছাড়া ডাকলে (bby, lamiya, bot ইত্যাদি) ১টি স্পেশাল ডায়ালগ রিপ্লাই যাবে
   onChat: async function ({ event, message }) {
     if (!event.body) return;
     const raw = event.body.toLowerCase().trim();
     const senderID = event.senderID;
 
-    // ট্রিগার লিস্ট (এখান থেকে মারিয়া বাদ দেওয়া হয়েছে)
     const triggers = ["baby", "bby", "xan", "bbz", "bot", "lamiya", "lamia", "লামিয়া"];
 
-    if (triggers.includes(raw)) {
+    if (triggers.some(t => raw === t || raw.includes(t))) {
       return this.handleReply(senderID, message);
     }
   },
 
   // রিপ্লাই সিলেক্টর
   handleReply: function (senderID, message) {
-    // আপনার আসল পার্সোনাল ফেসবুক UID (মেসেঞ্জারে +uid লিখে যেটি পাবেন)
-    const ownerID = "100021922069388";
+    const ownerID = "100021922069388"; 
 
-    // ১ নম্বর পার্ট: শুধু আপনার (Myoun) জন্য পার্সোনাল ২৯টি ডায়ালগ
     const ownerResponses = [
       "👑 সতর্কবার্তা! আমার ওনার Myoun মেসেজ দিয়েছে, সবাই একপাশে সাইড দে!",
       "🚨 সবাই ক্লিয়ার কর! ওনার Myoun-এর এন্ট্রি হইছে, এখন শুধু রাজত্ব চলবে!",
@@ -85,7 +89,6 @@ module.exports = {
       "❤️ Myoun ডাকলেই সার্ভার গরম হয়ে রিপ্লাই চলে আসবে!"
     ];
 
-    // ২ নম্বর পার্ট: সাধারণ অন্য যেকোনো ইউজারের জন্য ৩৮টি ডায়ালগ
     const normalResponses = [
       "🌹 বেবি, তোমার নোটিফিকেশন দেখলেই অনলাইনে চলে আসি!",
       "🥺 এত মিস করলে আগেই তো ডাকতে পারতে!",
@@ -133,3 +136,4 @@ module.exports = {
     }
   }
 };
+    
