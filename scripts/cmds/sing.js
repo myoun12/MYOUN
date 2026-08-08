@@ -3,85 +3,64 @@ const axios = require("axios");
 module.exports = {
         config: {
                 name: "sing",
-                version: "4.0",
-                author: "MahMUD",
+                version: "6.0",
+                author: "MYOUN SORKAR",
                 countDown: 5,
                 role: 0,
                 description: {
-                        bn: "যেকোনো গান সার্চ করে অডিও ফাইল ডাউনলোড করুন",
-                        en: "Search and download any song as an audio file",
-                        vi: "Tìm kiếm và tải xuống bất kỳ bài hát nào dưới dạng tệp âm thanh"
+                        bn: "অডিও গান ডাউনলোড",
+                        en: "Download audio songs",
                 },
                 category: "music",
-                guide: {
-                        bn: '   {pn} <গানের নাম>: গান ডাউনলোড করতে নাম লিখুন',
-                        en: '   {pn} <song name>: Enter song name to download',
-                        vi: '   {pn} <tên bài hát>: Nhập tên bài hát để tải xuống'
-                }
         },
 
-        langs: {
-                bn: {
-                        noInput: "× বেবি, গানের নাম তো দাও! 🎵\nউদাহরণ: {pn} shape of you",
-                        success: "✅ | এই নাও তোমার গান বেবি <😘\n• 𝐒𝐨𝐧𝐠: %1",
-                        error: "× গান ডাউনলোড করতে সমস্যা হয়েছে: %1"
-                },
-                en: {
-                        noInput: "× Baby, please provide a song name! 🎵\nExample: {pn} shape of you",
-                        success: "✅ | Here's your requested song baby <😘\n• 𝐒𝐨𝐧𝐠: %1",
-                        error: "× API error: %1"
-                },
-                vi: {
-                        noInput: "× Cưng ơi, vui lòng cung cấp tên bài hát! 🎵\nVí dụ: {pn} shape of you",
-                        success: "✅ | Bài hát của cưng đây <😘\n• 𝐁𝐚̀𝐢 𝐡𝐚́𝐭: %1",
-                        error: "× Lỗi: %1"
-                }
-        },
-
-        onStart: async function ({ api, event, args, message, getLang }) {
-                const authorName = String.fromCharCode(77, 97, 104, 77, 85, 68);
-                if (this.config.author !== authorName) {
-                        return api.sendMessage("You are not authorized to change the author name.", event.threadID, event.messageID);
-                }
-
+        onStart: async function ({ api, event, args, message }) {
                 const query = args.join(" ");
-                if (!query) return message.reply(getLang("noInput"));
+                if (!query) return message.reply("× গানের নাম দাও বেবি! 🎵");
 
                 try {
                         api.setMessageReaction("⌛", event.messageID, () => {}, true);
 
-                        // Mostakim YouTube Search & Download API
-                        const apiUrl = `https://mostakim.onrender.com/mostakim/ytSearch?search=${encodeURIComponent(query)}`;
-                        const searchRes = await axios.get(apiUrl, { timeout: 20000 });
+                        // API Sourcing to avoid 429 errors
+                        const apis = [
+                                `https://api.vytal.dev/music?query=${encodeURIComponent(query)}`,
+                                `https://mostakim.onrender.com/mostakim/ytSearch?search=${encodeURIComponent(query)}`
+                        ];
 
-                        // API Response validation
-                        const songData = Array.isArray(searchRes.data) ? searchRes.data[0] : (searchRes.data.results?.[0] || searchRes.data);
-                        const audioUrl = songData?.downloadUrl || songData?.audio || songData?.url || songData?.download_url;
-                        const songTitle = songData?.title || query;
+                        let audioUrl = null;
+                        let songTitle = query;
 
-                        if (!audioUrl) {
-                                throw new Error("গানটির অডিও লিংক খুঁজে পাওয়া যায়নি!");
+                        // Try first API, then fallback
+                        for (let url of apis) {
+                                try {
+                                        const res = await axios.get(url, { timeout: 15000 });
+                                        if (res.data) {
+                                                audioUrl = res.data.downloadUrl || res.data.audio || res.data.url;
+                                                songTitle = res.data.title || query;
+                                                break;
+                                        }
+                                } catch (e) { continue; }
                         }
 
-                        // Stream audio attachment
+                        if (!audioUrl) throw new Error("গান পাওয়া যায়নি!");
+
                         const audioStream = await axios({
                                 method: "GET",
                                 url: audioUrl,
                                 responseType: "stream",
-                                timeout: 35000
+                                timeout: 30000
                         });
 
                         return message.reply({
-                                body: getLang("success", songTitle),
+                                body: `✅ | গান রেডি বেবি <😘\n• 𝐒𝐨𝐧𝐠: ${songTitle}`,
                                 attachment: audioStream.data
                         }, () => {
                                 api.setMessageReaction("🪽", event.messageID, () => {}, true);
                         });
 
                 } catch (err) {
-                        console.error("Sing Error:", err.message);
                         api.setMessageReaction("❌", event.messageID, () => {}, true);
-                        return message.reply(getLang("error", err.message));
+                        return message.reply("× এই মুহূর্তে গান ডাউনলোডের লিমিট শেষ। একটু পরে চেষ্টা করো বেবি!");
                 }
         }
 };
