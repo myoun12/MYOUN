@@ -1,14 +1,9 @@
 const axios = require("axios");
 
-const mahmud = async () => {
-        const base = await axios.get("https://raw.githubusercontent.com/mahmudx7/HINATA/main/baseApiUrl.json");
-        return base.data.mahmud;
-};
-
 module.exports = {
         config: {
                 name: "sing",
-                version: "1.7",
+                version: "1.8",
                 author: "MahMUD",
                 countDown: 10,
                 role: 0,
@@ -55,18 +50,28 @@ module.exports = {
                 try {
                         api.setMessageReaction("⌛", event.messageID, () => {}, true);
 
-                        const baseUrl = await mahmud();
-                        const apiUrl = `${baseUrl}/api/song/mahmud?query=${encodeURIComponent(query)}`;
+                        // সচল ও নির্ভরযোগ্য API Endpoint
+                        const apiUrl = `https://api.popcat.xyz/v2/song?q=${encodeURIComponent(query)}`;
+                        const searchRes = await axios.get(apiUrl, { timeout: 15000 });
 
-                        const response = await axios({
+                        if (!searchRes.data || !searchRes.data.audio) {
+                                throw new Error("Song not found or stream unavailable");
+                        }
+
+                        const audioUrl = searchRes.data.audio;
+                        const songTitle = searchRes.data.title || query;
+
+                        // Audio Stream Download
+                        const audioStream = await axios({
                                 method: "GET",
-                                url: apiUrl,
-                                responseType: "stream"
+                                url: audioUrl,
+                                responseType: "stream",
+                                timeout: 30000
                         });
 
                         return message.reply({
-                                body: getLang("success", query),
-                                attachment: response.data
+                                body: getLang("success", songTitle),
+                                attachment: audioStream.data
                         }, () => {
                                 api.setMessageReaction("🪽", event.messageID, () => {}, true);
                         });
