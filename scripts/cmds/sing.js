@@ -4,7 +4,7 @@ module.exports = {
         config: {
                 name: "sing",
                 version: "4.0",
-                author: "Myoun",
+                author: "MahMUD",
                 countDown: 5,
                 role: 0,
                 description: {
