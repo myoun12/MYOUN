@@ -3,9 +3,9 @@ const axios = require("axios");
 module.exports = {
         config: {
                 name: "sing",
-                version: "1.8",
-                author: "MahMUD",
-                countDown: 10,
+                version: "4.0",
+                author: "Myoun",
+                countDown: 5,
                 role: 0,
                 description: {
                         bn: "যেকোনো গান সার্চ করে অডিও ফাইল ডাউনলোড করুন",
@@ -24,17 +24,17 @@ module.exports = {
                 bn: {
                         noInput: "× বেবি, গানের নাম তো দাও! 🎵\nউদাহরণ: {pn} shape of you",
                         success: "✅ | এই নাও তোমার গান বেবি <😘\n• 𝐒𝐨𝐧𝐠: %1",
-                        error: "× সমস্যা হয়েছে: %1। প্রয়োজনে Contact MahMUD।"
+                        error: "× গান ডাউনলোড করতে সমস্যা হয়েছে: %1"
                 },
                 en: {
                         noInput: "× Baby, please provide a song name! 🎵\nExample: {pn} shape of you",
                         success: "✅ | Here's your requested song baby <😘\n• 𝐒𝐨𝐧𝐠: %1",
-                        error: "× API error: %1. Contact MahMUD for help."
+                        error: "× API error: %1"
                 },
                 vi: {
                         noInput: "× Cưng ơi, vui lòng cung cấp tên bài hát! 🎵\nVí dụ: {pn} shape of you",
                         success: "✅ | Bài hát của cưng đây <😘\n• 𝐁𝐚̀𝐢 𝐡𝐚́𝐭: %1",
-                        error: "× Lỗi: %1. Liên hệ MahMUD để hỗ trợ."
+                        error: "× Lỗi: %1"
                 }
         },
 
@@ -50,23 +50,25 @@ module.exports = {
                 try {
                         api.setMessageReaction("⌛", event.messageID, () => {}, true);
 
-                        // সচল ও নির্ভরযোগ্য API Endpoint
-                        const apiUrl = `https://api.popcat.xyz/v2/song?q=${encodeURIComponent(query)}`;
-                        const searchRes = await axios.get(apiUrl, { timeout: 15000 });
+                        // Mostakim YouTube Search & Download API
+                        const apiUrl = `https://mostakim.onrender.com/mostakim/ytSearch?search=${encodeURIComponent(query)}`;
+                        const searchRes = await axios.get(apiUrl, { timeout: 20000 });
 
-                        if (!searchRes.data || !searchRes.data.audio) {
-                                throw new Error("Song not found or stream unavailable");
+                        // API Response validation
+                        const songData = Array.isArray(searchRes.data) ? searchRes.data[0] : (searchRes.data.results?.[0] || searchRes.data);
+                        const audioUrl = songData?.downloadUrl || songData?.audio || songData?.url || songData?.download_url;
+                        const songTitle = songData?.title || query;
+
+                        if (!audioUrl) {
+                                throw new Error("গানটির অডিও লিংক খুঁজে পাওয়া যায়নি!");
                         }
 
-                        const audioUrl = searchRes.data.audio;
-                        const songTitle = searchRes.data.title || query;
-
-                        // Audio Stream Download
+                        // Stream audio attachment
                         const audioStream = await axios({
                                 method: "GET",
                                 url: audioUrl,
                                 responseType: "stream",
-                                timeout: 30000
+                                timeout: 35000
                         });
 
                         return message.reply({
@@ -77,7 +79,7 @@ module.exports = {
                         });
 
                 } catch (err) {
-                        console.error("Sing Error:", err);
+                        console.error("Sing Error:", err.message);
                         api.setMessageReaction("❌", event.messageID, () => {}, true);
                         return message.reply(getLang("error", err.message));
                 }
