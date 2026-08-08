@@ -1,5 +1,3 @@
-📄 | Source code of "sing.js":
-
 const axios = require("axios");
 
 const mahmud = async () => {
@@ -80,3 +78,4 @@ module.exports = {
                 }
         }
 };
+                
