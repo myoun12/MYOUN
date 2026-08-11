@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 // Typing Indicator Function
-const typing = async (api, threadID, ms = 1200) => {
+const typing = async (api, threadID, ms = 1000) => {
   try {
     if (typeof api.sendTypingIndicator === "function") {
       await api.sendTypingIndicator(threadID, true);
@@ -11,85 +11,97 @@ const typing = async (api, threadID, ms = 1200) => {
   } catch {}
 };
 
-// Sretan/Working AI Fetcher Function
-async function getAIResponse(text) {
-  try {
-    const res = await axios.get(`https://api.kenliejugarap.com/ai-chat/?q=${encodeURIComponent(text)}`, { timeout: 10000 });
-    if (res.data && res.data.response) {
-      return res.data.response;
-    }
-  } catch {}
+// Local Smart Reply Generator (No external API delay)
+function getLocalResponse(text) {
+  const q = text.toLowerCase();
 
-  try {
-    const backupRes = await axios.get(`https://api.popcat.xyz/chatbot?msg=${encodeURIComponent(text)}&owner=Myoun&botname=Baby`, { timeout: 8000 });
-    if (backupRes.data && backupRes.data.response) {
-      return backupRes.data.response;
-    }
-  } catch {}
+  if (q.includes("kemon") || q.includes("কেমন")) {
+    const replies = ["আমি ভালো আছি! তুমি কেমন আছো?", "একদম বিন্দাস! তোমার কি খবর?", "আলহামদুলিল্লাহ্‌ ভালো। তুমি কেমন আছো?"];
+    return replies[Math.floor(Math.random() * replies.length)];
+  }
 
-  return "হুম বলো, শুনছি! কেমন আছো?";
+  if (q.includes("ki koro") || q.includes("কি করো") || q.includes("কি করিস")) {
+    const replies = ["তোমার মেসেজের জন্য অপেক্ষা করছিলাম!", "বসে বসে তোমার সাথে চ্যাট করছি 🙈", "কিছু না, তোমার কথা ভাবছি!"];
+    return replies[Math.floor(Math.random() * replies.length)];
+  }
+
+  if (q.includes("khabar") || q.includes("kheyecho") || q.includes("খাবার") || q.includes("খেয়েছো")) {
+    const replies = ["আমি তো ডিজিটাল খাবার (ডাটা) খাই! তুমি খাইছো?", "হ্যাঁ খেয়েছি! তুমি কি খেলে আজ?", "হুমম খাইছি! তুমি খাইছো তো?"];
+    return replies[Math.floor(Math.random() * replies.length)];
+  }
+
+  if (q.includes("nam ki") || q.includes("নাম কি")) {
+    return "আমার নাম Baby! আপনার কিউটি বট 🙈";
+  }
+
+  if (q.includes("love") || q.includes("ভালোবাসি") || q.includes("bhalobashi")) {
+    return "আমিও তোমাকে অনেক ভালোবাসি! ❤️✨";
+  }
+
+  // Default Random Replies
+  const defaults = [
+    "হুমম বলো, শুনছি! 💖",
+    "অহ তাই নাকি? তারপর বলো!",
+    "হুমমম... তারপর কি হলো?",
+    "কথা শুনে বেশ ভালো লাগলো! 🥰",
+    "হ্যাঁ বলো, আমি তো অলওয়েজ লাইনে আছি!",
+    "হুমম বুঝলাম! আর কি খবর বলো?"
+  ];
+  return defaults[Math.floor(Math.random() * defaults.length)];
 }
 
 module.exports = {
   config: {
     name: "baby",
     aliases: ["xan", "bby", "bbz", "lamiya", "lamia", "bot"],
-    version: "6.0",
+    version: "7.0",
     author: "rX (fixed by AI)",
     countDown: 0,
     role: 0,
-    shortDescription: "Always Active AI Chatbot",
-    longDescription: "Responds to all messages automatically",
+    shortDescription: "Instant Local Smart Baby AI",
+    longDescription: "Instant offline reply without API timeout",
     category: "box chat",
     guide: {
       en: "{p}baby [message]"
     }
   },
 
-  // +baby কমান্ড দিয়ে ডাকলে
   onStart: async function ({ api, event, args, message }) {
     const query = args.join(" ").trim();
     const threadID = event.threadID;
 
     try {
       if (!query) {
-        await typing(api, threadID, 1000);
+        await typing(api, threadID, 800);
         const ran = ["Bolo baby 💖", "Hea baby 😚", "Yes I'm here 😘", "Ki khobor janu? 🥰"];
         return message.reply(ran[Math.floor(Math.random() * ran.length)]);
       }
 
-      await typing(api, threadID, 1200);
-      const reply = await getAIResponse(query);
-      return message.reply(reply);
+      await typing(api, threadID, 800);
+      return message.reply(getLocalResponse(query));
 
     } catch (err) {
       console.error("Baby command error:", err.message);
     }
   },
 
-  // বটের মেসেজে Reply দিলে
   onReply: async function ({ api, event, message }) {
     const text = event.body?.trim();
     if (!text) return;
 
     try {
-      await typing(api, event.threadID, 1200);
-      const reply = await getAIResponse(text);
-      await message.reply(reply);
+      await typing(api, event.threadID, 800);
+      await message.reply(getLocalResponse(text));
     } catch (err) {
       console.error("onReply error:", err.message);
     }
   },
 
-  // গ্রুপে বা ইনবক্সে যেকোনো মেসেজ দিলেই উত্তর দেবে
   onChat: async function ({ api, event, message }) {
     const raw = event.body ? event.body.trim() : "";
     if (!raw) return;
 
-    // বট যদি নিজে মেসেজ পাঠায় তবে ইগনোর করবে
     if (event.senderID === api.getCurrentUserID()) return;
-
-    // কমান্ড হলে (যেমন +help বা +cmd) ইগনোর করবে
     if (raw.startsWith("+") || raw.startsWith("!") || raw.startsWith("/")) return;
 
     const senderID = event.senderID;
@@ -97,10 +109,10 @@ module.exports = {
     const ownerID = "100021922069388"; // Myoun UID
 
     try {
-      // ১. শুধু 'baby' বা ট্রিগার ওয়ার্ড লিখলে ওনার/সাধারণ রিপ্লাই
       const triggers = ["baby", "bby", "xan", "bbz", "bot", "lamiya", "lamia", "লামিয়া"];
+      
       if (triggers.includes(raw.toLowerCase())) {
-        await typing(api, threadID, 1000);
+        await typing(api, threadID, 800);
 
         if (senderID === ownerID) {
           const ownerResponses = [
@@ -122,10 +134,8 @@ module.exports = {
         return message.reply(funny[Math.floor(Math.random() * funny.length)]);
       }
 
-      // ২. যেকোনো সাধারণ লেখার সরাসরি উত্তর দেবে
-      await typing(api, threadID, 1200);
-      const reply = await getAIResponse(raw);
-      return message.reply(reply);
+      await typing(api, threadID, 800);
+      return message.reply(getLocalResponse(raw));
 
     } catch (err) {
       console.error("onChat error:", err.message);
