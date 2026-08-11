@@ -46,13 +46,13 @@ module.exports = {
           return api.sendMessage(" | Use: remove [Question] - [Reply]", event.threadID, event.messageID);
 
         const [ask, ans] = parts.map(p => p.trim());
-        const res = await axios.get(`${simsim}/delete?ask=${encodeURIComponent(ask)}&ans=${encodeURIComponent(ans)}`);
+        const res = await axios.get(`${simsim}/delete?ask=${encodeURIComponent(ask)}&ans=${encodeURIComponent(ans)}`, { timeout: 8000 });
         return api.sendMessage(res.data.message, event.threadID, event.messageID);
       }
 
       // LIST
       if (command === "list") {
-        const res = await axios.get(`${simsim}/list`);
+        const res = await axios.get(`${simsim}/list`, { timeout: 8000 });
         if (res.data.code === 200) {
           return api.sendMessage(
             `♾ Total Questions Learned: ${res.data.totalQuestions}\n★ Total Replies Stored: ${res.data.totalReplies}\n☠︎︎ Developer: ${res.data.author}`,
@@ -70,7 +70,7 @@ module.exports = {
           return api.sendMessage(" | Use: edit [Question] - [OldReply] - [NewReply]", event.threadID, event.messageID);
 
         const [ask, oldReply, newReply] = parts.map(p => p.trim());
-        const res = await axios.get(`${simsim}/edit?ask=${encodeURIComponent(ask)}&old=${encodeURIComponent(oldReply)}&new=${encodeURIComponent(newReply)}`);
+        const res = await axios.get(`${simsim}/edit?ask=${encodeURIComponent(ask)}&old=${encodeURIComponent(oldReply)}&new=${encodeURIComponent(newReply)}`, { timeout: 8000 });
         return api.sendMessage(res.data.message, event.threadID, event.messageID);
       }
 
@@ -99,12 +99,12 @@ module.exports = {
         let teachUrl = `${simsim}/teach?ask=${encodeURIComponent(ask)}&ans=${encodeURIComponent(ans)}&senderID=${uid}&senderName=${encodeURIComponent(senderName)}&groupID=${encodeURIComponent(groupID)}`;
         if (groupName) teachUrl += `&groupName=${encodeURIComponent(groupName)}`;
 
-        const res = await axios.get(teachUrl);
+        const res = await axios.get(teachUrl, { timeout: 8000 });
         return api.sendMessage(`${res.data.message || "Reply added successfully!"}`, event.threadID, event.messageID);
       }
 
       // NORMAL SIMSIM CHAT
-      const res = await axios.get(`${simsim}/simsimi?text=${encodeURIComponent(query)}&senderName=${encodeURIComponent(senderName)}`);
+      const res = await axios.get(`${simsim}/simsimi?text=${encodeURIComponent(query)}&senderName=${encodeURIComponent(senderName)}`, { timeout: 8000 });
       const responses = Array.isArray(res.data.response) ? res.data.response : [res.data.response];
 
       for (const reply of responses) {
@@ -134,7 +134,7 @@ module.exports = {
       const replyText = event.body ? event.body.toLowerCase() : "";
       if (!replyText) return;
 
-      const res = await axios.get(`${simsim}/simsimi?text=${encodeURIComponent(replyText)}&senderName=${encodeURIComponent(senderName)}`);
+      const res = await axios.get(`${simsim}/simsimi?text=${encodeURIComponent(replyText)}&senderName=${encodeURIComponent(senderName)}`, { timeout: 8000 });
       const responses = Array.isArray(res.data.response) ? res.data.response : [res.data.response];
 
       for (const reply of responses) {
@@ -196,7 +196,7 @@ module.exports = {
         const query = raw.replace(/^(baby|bot|bby|jan|xan|জান|বট|বেবি)\s+/i, "").trim();
         if (!query) return;
 
-        const res = await axios.get(`${simsim}/simsimi?text=${encodeURIComponent(query)}&senderName=${encodeURIComponent(senderName)}`);
+        const res = await axios.get(`${simsim}/simsimi?text=${encodeURIComponent(query)}&senderName=${encodeURIComponent(senderName)}`, { timeout: 8000 });
         const responses = Array.isArray(res.data.response) ? res.data.response : [res.data.response];
 
         for (const reply of responses) {
