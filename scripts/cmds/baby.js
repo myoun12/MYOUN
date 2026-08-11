@@ -1,4 +1,4 @@
-Const axios = require("axios");
+const axios = require("axios");
 const simsim = "https://simsimi.cyberbot.top";
 
 module.exports = {
