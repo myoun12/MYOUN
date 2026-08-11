@@ -11,42 +11,57 @@ const typing = async (api, threadID, ms = 1000) => {
   } catch {}
 };
 
-// Fast & Smart Gemini AI Response Fetcher
+// Extremely Reliable Multi-API AI Fetcher
 async function getAIResponse(text) {
+  const query = encodeURIComponent(text);
+
+  // Endpoint 1: Free SimSimi/AI Chat
   try {
-    const backupRes = await axios.get(`https://api.sandipbaruwal.com.np/gemini?prompt=${encodeURIComponent(text)}`, { timeout: 8000 });
-    if (backupRes.data && backupRes.data.answer) {
-      return backupRes.data.answer;
+    const res = await axios.get(`https://api.simsimi.vn/v1/simtalk?text=${query}&lc=bn`, { timeout: 6000 });
+    if (res.data && res.data.message) {
+      return res.data.message;
     }
   } catch {}
 
+  // Endpoint 2: Popcat AI
   try {
-    const res = await axios.get(`https://api.kenliejugarap.com/ai-chat/?q=${encodeURIComponent(text)}`, { timeout: 8000 });
+    const res = await axios.get(`https://api.popcat.xyz/chatbot?msg=${query}&owner=Myoun&botname=Baby`, { timeout: 6000 });
     if (res.data && res.data.response) {
       return res.data.response;
     }
   } catch {}
 
-  return "আমাকে বেবি ডাকার অধিকার সবার নেই, আমি শুধুই আমার Myoun-এর বেবি! 🙈❤️✨";
+  // Contextual Dynamic Fallbacks (No fixed repetitive text)
+  const q = text.toLowerCase();
+  if (q.includes("ki koro") || q.includes("কি করো")) return "বসে বসে তোমার মেসেজের জন্য অপেক্ষা করছিলাম! তুমি কি করো?";
+  if (q.includes("kemon") || q.includes("কেমন")) return "আমি তো বেশ ভালো আছি! তুমি কেমন আছো?";
+  if (q.includes("khabar") || q.includes("খেয়েছ")) return "হুমম খাইছি! তুমি খাবার খেয়েছ তো?";
+  
+  const smartDefaults = [
+    "হুমম বলো, শুনছি! আর কি খবর বল?",
+    "অহ তাই? তারপর কি হলো বলো!",
+    "আরে সত্যি! চলো আরো গল্প করি!",
+    "তোমার সাথে কথা বলতে বেশ ভালো লাগে!"
+  ];
+  return smartDefaults[Math.floor(Math.random() * smartDefaults.length)];
 }
 
 module.exports = {
   config: {
     name: "baby",
     aliases: ["xan", "bby", "bbz", "lamiya", "lamia", "bot"],
-    version: "11.0",
+    version: "12.0",
     author: "rX (fixed by AI)",
     countDown: 0,
     role: 0,
-    shortDescription: "Smart Gemini Powered Baby AI",
-    longDescription: "Responds intelligently using Gemini AI model without double reply bug",
+    shortDescription: "Smart Baby AI",
+    longDescription: "Fully working AI chatbot without repetitive reply bug",
     category: "box chat",
     guide: {
       en: "{p}baby [message]"
     }
   },
 
-  // +baby রান হলে
   onStart: async function ({ api, event, args, message }) {
     const query = args.join(" ").trim();
     const threadID = event.threadID;
@@ -71,7 +86,6 @@ module.exports = {
     }
   },
 
-  // বটের কোনো মেসেজে Reply দিলে শুধু onReply কাজ করবে
   onReply: async function ({ api, event, message }) {
     const text = event.body?.trim();
     if (!text) return;
@@ -87,18 +101,12 @@ module.exports = {
     }
   },
 
-  // সাধারণ কোনো চ্যাট পাঠালে
   onChat: async function ({ api, event, message }) {
     const raw = event.body ? event.body.trim() : "";
     if (!raw) return;
 
-    // ১. বট নিজের পাঠানো মেসেজ ইগনোর করবে
     if (event.senderID === api.getCurrentUserID()) return;
-
-    // ২. কোনো মেসেজে Reply দেওয়া থাকলে onChat কাজ করবে না (যাতে double reply না আসে)
     if (event.messageReply) return;
-
-    // ৩. কমান্ড বা প্রেফিক্স দিয়ে শুরু হলে ইগনোর করবে
     if (raw.startsWith("+") || raw.startsWith("!") || raw.startsWith("/")) return;
 
     const senderID = event.senderID;
@@ -108,11 +116,9 @@ module.exports = {
     try {
       const triggers = ["baby", "bby", "xan", "bbz", "bot", "lamiya", "lamia", "লামিয়া"];
       
-      // শুধু ট্রিগার নাম লিখলে
       if (triggers.includes(raw.toLowerCase())) {
         await typing(api, threadID, 800);
 
-        // আপনি (Myoun) ডাকলে স্পেশাল ২৯টি রিপ্লাই
         if (senderID === ownerID) {
           const ownerResponses = [
             "👑 সতর্কবার্তা! আমার ওনার Myoun মেসেজ দিয়েছে, সবাই একপাশে সাইড দে!",
@@ -150,7 +156,6 @@ module.exports = {
           });
         }
 
-        // অন্য কেউ ডাকলে রিপ্লাই (এখানে আপনার নতুন লাইনগুলো যুক্ত করে দেওয়া হয়েছে)
         const funny = [
           "🙈 আমাকে বেবি বলে ডাকার অধিকার সবার নেই, আমি শুধুই আমার Myoun-এর বেবি! ❤️✨",
           "🛑 থামো থামো! বেবি ডাকার অনুমতি শুধু Myoun-কে দেওয়া হয়েছে, বুঝেছ? 😜",
@@ -200,7 +205,6 @@ module.exports = {
         });
       }
 
-      // সাধারণ AI চ্যাট
       await typing(api, threadID, 1000);
       const reply = await getAIResponse(raw);
       return message.reply(reply, (err, info) => {
