@@ -1,4 +1,4 @@
-Const axios = require("axios");
+const axios = require("axios");
 
 // Primary SimSimi API Endpoint
 const simsim = "https://simsimi-api-tjb1.onrender.com";
