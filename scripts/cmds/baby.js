@@ -4,7 +4,7 @@ const baseApiUrl = async () => {
 };
 
 module.exports.config = {
-    name: "baby",
+    name: "bby",
     aliases: ["baby", "bbe", "babe"],
     version: "6.9.0",
     author: "dipto",
@@ -193,6 +193,4 @@ module.exports.onChat = async ({
     } catch (err) {
         return api.sendMessage(`Error: ${err.message}`, event.threadID, event.messageID);
     }
-
-
-বট বললে রিপ্লাই দিচ্ছে না কেনো
+};
