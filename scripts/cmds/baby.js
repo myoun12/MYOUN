@@ -164,7 +164,8 @@ module.exports.onChat = async ({
 }) => {
     try {
         const body = event.body ? event.body?.toLowerCase() : ""
-        if (body.startsWith("baby") || body.startsWith("bby") || body.startsWith("lamiya") || body.startsWith("jan") || body.startsWith("babu") || body.startsWith("janu") || body.startsWith("myoun") || body.startsWith("bot")) {
+        if (body.startsWith("baby") || body.startsWith("bby") || body.startsWith("rocky") || body.startsWith("jan") || body.startsWith("babu") || body.startsWith("janu")) {
+            const arr = body.replace(/^\S+\s*/, "")
             const randomReplies = ["ডাকো কেন 🥺 প্রেম করবা নাকি 😞", "বলো না ভালোবাসি🥹..!!", "ওই জান কাছে আসো 🫦😩", "আলাবু বলো সোনা 🤧", "রকি রে দেখছো? 🥺 তাকে কোথাও খুজে পাচ্ছি না 😩", "চুম্মা দাও ৫ টাকা দিবো🥺🤌", "হ্যাঁ গো জান বলো 🙂", "ডাকিস না, তুই পচা 😼", "তুমি কি আমাকে পসন্দ করো 🙂", "ডুম ডুম টেডাও 😬"];
             if (!arr) {
 
@@ -192,4 +193,6 @@ module.exports.onChat = async ({
     } catch (err) {
         return api.sendMessage(`Error: ${err.message}`, event.threadID, event.messageID);
     }
-};
+
+
+বট বললে রিপ্লাই দিচ্ছে না কেনো
