@@ -13,13 +13,14 @@ module.exports = {
     category: "events"
   },
 
-  langs: {
+    langs: {
     en: {
       defaultWelcomeMessage: "𝗪𝗲𝗹𝗰𝗼𝗺𝗲 {userName} 🎉\n┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄\n✦ Glad to have you here! Enjoy your stay and make great memories 🌸",
       botAddedMessage:
-        "━━━━━━━━━━━━━━━━━━━\n🤖 ᴛʜᴀɴᴋ ʏᴏᴜ ғᴏʀ ᴀᴅᴅɪɴɢ ᴍᴇ ᴛᴏ ᴛʜᴇ ɢʀᴏᴜᴘ! 💖\n\n⚙️ ʙᴏᴛ ᴘʀᴇꜰɪx : /\n📜 ᴛʏᴘᴇ /help ᴛᴏ sᴇᴇ ᴀʟʟ ᴄᴏᴍᴍᴀɴᴅs\n\n✨ ʟᴇᴛ's ᴍᴀᴋᴇ ᴛʜɪs ɢʀᴏᴜᴘ ᴇᴠᴇɴ ᴍᴏʀᴇ ꜰᴜɴ ᴛᴏɢᴇᴛʜᴇʀ! 😄\n━━━━━━━━━━━━━━━━━━━"
+        "┌─────────────────────────┐\n    💫 𝖡𝖮𝖳 𝖠𝖢𝖳𝖨𝖵𝖠𝖳𝖤D 💫\n└─────────────────────────┘\n\n 𝐇𝐞𝐥𝐥𝐨 𝐄𝐯𝐞𝐫𝐲𝐨𝐧𝐞! 👋\n 🤖 𝖨 𝖺𝗆 𝗇𝗈𝗐 𝖺𝖼𝗍𝗂𝗏𝖾 𝗂𝗇 𝗍𝗁𝗂𝗌 𝖼𝗁𝖺𝗍.\n\n 👑 𝗢𝗪𝗡𝗘𝗥 ──► মা ই য়ু ন\n\n ⚙️ 𝗣𝗿𝗲𝗳𝗶𝘅 ──► `+`\n 📜 𝖳𝗒𝗉𝖾 `+𝗁𝖾𝗅𝗉` 𝖿𝗈𝗋 𝖼𝗈𝗆𝗆𝖺𝗇𝖽𝗌\n\n ✨ 𝖫𝖾𝗍'𝗌 𝗆𝖺𝗄𝖾 𝗂𝗍 𝖺𝗐𝖾𝗌𝗈𝗆𝖾! 🚀\n───────────────────────────"
     }
   },
+
 
   onStart: async ({ threadsData, message, event, api, usersData, getLang }) => {
     if (event.logMessageType !== "log:subscribe") return;
