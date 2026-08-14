@@ -23,7 +23,7 @@ module.exports = {
     role: 0,
     longDescription: "Generate anime-style kiss image",
     category: "love",
-    guide: "{pn} @mention"
+    guide: "{pn} @mention1 @mention2"
   },
 
   onStart: async function ({ message, event, api }) {
